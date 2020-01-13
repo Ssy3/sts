@@ -335,47 +335,90 @@
               <div class="p-2"><span>{!! Avatar::create($activityTicket->causer->name)->setFontSize(20)->setDimension(50, 50)->toSvg(); !!}</span></div>
               <div class="comment-text w-100">
                 <h5>
-                  {{$activityTicket->causer->name}}
+                  {{$activityTicket->causer->name}}: {{$activityTicket->id}}
                 </h5>
                 @endif
-                <!--<p class="m-b-5"><span class="label label-light-info">{{$activityTicket->description}}</span> {{ $activityTicket->subject->ticket_title }}</p>-->
+
+                {{--<p class="m-b-5"><span class="label label-light-info">{{$activityTicket->description}}</span> {{ $activityTicket->subject->ticket_title }}</p>--}}
                 <div class="comment-footer">
-                  <!-- changes from the ticket Modal to the status
+
+                  @if ($activityTicket->description == 'created')
+                  <p class="m-b-5"><span class="label label-light-info">{{$activityTicket->description}}</span> {{ $activityTicket->subject->ticket_title }}</p>
+                  @endif
+                  <!-- changes -->
                   @if( isset( $activityTicket->changes['attributes']['status_id'] ))
-                  @if (json_encode($activityTicket->changes['attributes']['status_id']) !== '3')
+                  {{--@if (json_encode($activityTicket->changes['attributes']['status_id']) !== '3')--}}
+                  @if ($activityTicket->description != 'created')
                   @foreach ($statuses as $status)
                   @if($status->id == $activityTicket->changes['attributes']['status_id'])
-                  <span class="label label-light-info"> updated </span> status to <span class="label label-light-info"> {{$status->status_name}} </span>
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> Status to <span class="label label-light-info"> {{$status->status_name}} </span> </p>
                   @endif
                   @endforeach
                   @endif
-                  @endif -->
-
-                  <!-- assign agent -->
-                  @if( isset( $activityTicket->changes['attributes']['assign'] ))
-                  @foreach($users as $user)
-                  @if($user->id == $activityTicket->changes['attributes']['assign'])
-                  assigned <span class="label label-light-info"> {{$user->name}} </span>
-                  @endif
-                  @endforeach
                   @endif
 
-                  <!-- unassign agent -->
-                  @if( isset( $activityTicket->changes['attributes']['unassign'] ))
-                  @foreach($users as $user)
-                  @if($user->id == $activityTicket->changes['attributes']['unassign'])
-                  unassigned <span class="label label-light-info"> {{$user->name}} </span>
+                  {{--assigned and unassigned agent--}}
+                  @if( isset( $activityTicket->changes['attributes']['user_id'] ))
+                  @foreach ($all_users as $each_user)
+                  @if($each_user->id == $activityTicket->changes['attributes']['user_id'])
+                  <span class="label label-light-info"> {{$activityTicket->description}} </span> {{$each_user->name}}
                   @endif
                   @endforeach
                   @endif
 
-                  <!-- ticket info -->
-                  @if( isset( $activityTicket->changes['attributes']['updated']))
-                  @foreach( $activityTicket->changes['attributes'] as $key => $index)
-                  @if ($key != 'from')
-                  {{$key}} <span class="label label-light-info"> {{$index}} </span>
+                  {{--group--}}
+                  @if( isset( $activityTicket->changes['attributes']['group_id'] ))
+                  @if ($activityTicket->description != 'created')
+                  @foreach ($groups as $group)
+                  @if($group->id == $activityTicket->changes['attributes']['group_id'])
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> Group to <span class="label label-light-info"> {{$group->group_name}} </span> </p>
                   @endif
                   @endforeach
+                  @endif
+                  @endif
+
+                  {{--location--}}
+                  @if( isset( $activityTicket->changes['attributes']['location_id'] ))
+                  @if ($activityTicket->description != 'created')
+                  @foreach ($locations as $location)
+                  @if($location->id == $activityTicket->changes['attributes']['location_id'])
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> Location to <span class="label label-light-info"> {{$location->location_name}} </span> </p>
+                  @endif
+                  @endforeach
+                  @endif
+                  @endif
+
+                  {{--category--}}
+                  @if( isset( $activityTicket->changes['attributes']['category_id'] ))
+                  @if ($activityTicket->description != 'created')
+                  @foreach ($categories as $category)
+                  @if($category->id == $activityTicket->changes['attributes']['category_id'])
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> Category to <span class="label label-light-info"> {{$category->category_name}} </span> </p>
+                  @endif
+                  @endforeach
+                  @endif
+                  @endif
+
+                  {{--requested by--}}
+                  @if( isset( $activityTicket->changes['attributes']['requested_by'] ))
+                  @if ($activityTicket->description != 'created')
+                  @foreach ($all_users as $each_user)
+                  @if($each_user->id == $activityTicket->changes['attributes']['requested_by'])
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> Requested By to <span class="label label-light-info"> {{$each_user->name}} </span> </p>
+                  @endif
+                  @endforeach
+                  @endif
+                  @endif
+
+                  {{--ticket details--}}
+                  @if( isset( $activityTicket->changes['attributes']) && !isset( $activityTicket->changes['attributes']['user_id'] ))
+                  @if ($activityTicket->description != 'created')
+                  @foreach ($activityTicket->changes['attributes'] as $key => $index)
+                  @if($key != 'updated_at' && $key !='status_id' && $key !='group_id' && $key !='category_id' && $key !='location_id' && $key !='requested_by' )
+                  <p><span class="label label-light-info"> {{$activityTicket->description}} </span> {{$key}} to <span class="label label-light-info"> {{$index}} </span> </p>
+                  @endif
+                  @endforeach
+                  @endif
                   @endif
 
                   <!-- end changes -->

@@ -1,8 +1,12 @@
 <?php
 namespace Deployer;
 
+// with(new \Dotenv\Dotenv(__DIR__))->load();
+
 require 'recipe/laravel.php';
-require 'recipe/cachetool.php';
+require 'vendor/deployer/recipes/recipe/cachetool.php';
+require 'vendor/deployer/recipes/recipe/slack.php';
+// require 'config/deploy.php';
 
 
 // Project name
@@ -14,6 +18,8 @@ set('repository', 'git@github.com:omego/sts.git');
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true); 
 
+set('slack_webhook', env('SLACK_DEPLOY'));
+
 // Shared files/dirs between deploys 
 add('shared_files', []);
 add('shared_dirs', []);
@@ -21,6 +27,9 @@ add('shared_dirs', []);
 // Writable dirs by web server 
 add('writable_dirs', []);
 
+before('deploy', 'slack:notify');
+after('success', 'slack:notify:success');
+// after('deploy:failed', 'slack:notify:failure');
 
 // Hosts
 
@@ -66,6 +75,10 @@ task('supervisor:reload', function () {
     run("cd {{release_path}} && supervisorctl reload");
 });
 
+task('current:clear', function () {
+    run("cd {{deploy_path}}/current && php artisan config:clear");
+});
+
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
 
@@ -81,5 +94,13 @@ after('deploy:symlink', 'cachetool:clear:opcache');
 
 after('cachetool:clear:opcache', 'supervisor:reload');
 
-after('supervisor:reload', 'artisan:config:clear');
+// after('deploy:symlink', 'supervisor:reload');
 
+after('supervisor:reload', 'current:clear');
+
+// set('slack_webhook', env('SLACK_DEPLOYER'));
+// set('slack_webhook', env('slack_webhook'));
+
+// after('current:clear', 'slack:notify:success');
+
+// after('success', 'slack:notify:success');

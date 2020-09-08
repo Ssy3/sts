@@ -11,8 +11,11 @@
 |
 */
 
-$app = new Illuminate\Foundation\Application(
-    dirname(__DIR__)
+// $app = new Illuminate\Foundation\Application(
+//     dirname(__DIR__)
+// );
+$app = new Gecche\Multidomain\Foundation\Application(
+    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
 /*

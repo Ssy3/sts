@@ -16,7 +16,7 @@
 // );
 $app = new Gecche\Multidomain\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__),
-    dirname(__DIR__) . DIRECTORY_SEPARATOR . 'shared'
+    dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'shared'
 );
 
 /*

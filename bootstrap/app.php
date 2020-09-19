@@ -11,8 +11,12 @@
 |
 */
 
-$app = new Illuminate\Foundation\Application(
-    dirname(__DIR__)
+// $app = new Illuminate\Foundation\Application(
+//     dirname(__DIR__)
+// );
+$app = new Gecche\Multidomain\Foundation\Application(
+    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__),
+    dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'shared'
 );
 
 /*

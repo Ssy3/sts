@@ -12,6 +12,7 @@
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
+        "gecche/laravel-multidomain": "1.3.6",
         "glorand/laravel-model-settings": "^3.5",
         "itsgoingd/clockwork": "^4.0",
         "jeremykenedy/laravel-logger": "^3.0",

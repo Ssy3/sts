@@ -647,7 +647,7 @@ class TicketController extends Controller
 
     public function ChangeTicketStatus($status_id, $tickets_id)
     {
-      $ticket = Ticket::withoutGlobalScope(GlobalScope::class)->LocalTicket()->findorfail($tickets_id);
+      $ticket = Ticket::findorfail($tickets_id);
 
       /*
       activity()

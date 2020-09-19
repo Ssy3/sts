@@ -89,11 +89,15 @@ class TicketController extends Controller
           foreach ($userGroups as $userGroupsId) {
             $userGroupsIdArray[] =  $userGroupsId->id;
           };
+          $agentTicketIdArray = [];
           $agentTickets = Ticket::with('user')->get();
           // $TicketAgents = $agentTickets;
-          foreach ($agentTickets as $agentTicket) {
-            $agentTicketIdArray[] =  $agentTicket->id;
-          };
+          if ($agentTickets) {
+            foreach ($agentTickets as $agentTicket) {
+              $agentTicketIdArray[] =  $agentTicket->id;
+            };
+          }
+
           // dd($agentTicketIdArray);
         }
 

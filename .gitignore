@@ -16,3 +16,4 @@ composer.lock
 /storage/*.index
 *.live
 *.com
+bootstrap/app.php
